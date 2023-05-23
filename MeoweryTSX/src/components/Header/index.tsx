@@ -1,5 +1,5 @@
 import React from "react";
-import { HeaderStyled } from "styled.jsx";
+import { HeaderStyled } from "./styled";
 
 function Header() {
   return (
