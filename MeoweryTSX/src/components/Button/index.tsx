@@ -1,8 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { ButtonStyled } from "./styled";
 
-function Button({ createDeck, buttonText }) {
+interface ButtonProps {
+  createDeck: () => void;
+  buttonText: string;
+}
+
+function Button({ createDeck, buttonText }: ButtonProps) {
   const handleClick = () => {
     createDeck();
   };
