@@ -1,7 +1,14 @@
+// import React from "react";
 import { CounterStyled } from "./styled";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 
-function Counter({ counterText, turns }) {
+interface CounterProps {
+  counterText: string;
+  turns: number;
+}
+
+
+function Counter({ counterText, turns }: CounterProps) {
   return (
     <CounterStyled>
       <p>{counterText} {turns}</p>

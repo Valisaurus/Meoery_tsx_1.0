@@ -1,7 +1,8 @@
-import React from "react";
+// import React from "react";
 import { HeaderStyled } from "./styled";
 
-function Header() {
+
+function Header(): JSX.Element {
   return (
     <HeaderStyled>
       <h1>MEOWERY</h1>

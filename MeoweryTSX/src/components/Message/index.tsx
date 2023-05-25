@@ -1,7 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
+// import React from "react";
+import * as PropTypes from "prop-types";
 
-function Message({ messageText }) {
+interface MessageProps {
+  messageText: string;
+}
+
+function Message({ messageText }: MessageProps) {
 
     return ( 
       <div className="message">{messageText}</div>   
