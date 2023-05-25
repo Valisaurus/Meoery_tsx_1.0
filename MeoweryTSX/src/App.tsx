@@ -1,5 +1,6 @@
 import "./App.css";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { useState, useEffect } from "react";
 import Header from "./components/Header/index";
 import Board from "./components/Board/index";
@@ -14,6 +15,11 @@ type CatImage = {
   id: number;
 };
 
+type Cat = {
+  message: string;
+  status: string;
+};
+
 function App() {
   const [cards, setCards] = useState<CatImage[]>([]);
   const [turns, setTurns] = useState<number>(0);
@@ -22,35 +28,46 @@ function App() {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [matchedPairs, setMatchedPairs] = useState<number>(0);
-
-  //starting with no points
-  // let points = 0;
+  const [imageData, setImageData] = useState<Cat | undefined>();
+  const [error, setError] = useState<string | undefined>();
 
   // fetch cat-images from api when app is mounted
   useEffect(() => {
-    createDeck();
+    createDeck1();
   }, []);
 
-  const createDeck = () => {
-    const apiKey = process.env.REACT_APP_API_KEY;
+  function createDeck(props: { url: string }) {}
+
+  const createDeck1 = async () => {
+    const apiKey: string = process.env.REACT_APP_API_KEY;
     const api = `https://api.thecatapi.com/v1/images/search?limit=10`;
 
     setMatchedPairs(0);
 
-    let deck: CatImage[] = [];
+    const queryClient = useQueryClient();
 
-    fetch(api, { headers: { "x-api-key": apiKey || "" } })
-      .then((response) => response.json())
-      .then((data) => {
-        const images = data.slice(0, 8) as CatImage[];
-        deck = [...images, ...images]
-          .sort(() => Math.random() - 0.5)
-          .map((card) => ({ ...card, matched: false, id: Math.random() }));
-        setCards(deck);
-        setTurns(0);
-        setMatchedPairs(0); // Reset matchedPairs to 0
-      })
-      .catch((error) => console.error(error));
+    try {
+      const response = await fetch(api, {
+        headers: { "x-api-key": apiKey || "" },
+      });
+      const data = await response.json();
+      setImageData(data);
+
+      const images = data.slice(0, 8) as CatImage[];
+      const deck = [...images, ...images]
+        .sort(() => Math.random() - 0.5)
+        .map((card) => ({ ...card, matched: false, id: Math.random() }));
+
+      setCards(deck);
+      setTurns(0);
+      setMatchedPairs(0); // Reset matchedPairs to 0
+
+      // Invalidate and refetch the deck query to update the data
+      await queryClient.invalidateQueries(["deck"]);
+      await queryClient.refetchQueries(["deck"]);
+    } catch (error) {
+      setError(error as string);
+    }
   };
 
   //if a card already has been selected, set next card to "cardTwo"
