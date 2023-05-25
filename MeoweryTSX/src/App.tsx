@@ -1,4 +1,5 @@
 import "./App.css";
+import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import Header from "./components/Header/index";
 import Board from "./components/Board/index";
@@ -7,14 +8,20 @@ import Button from "./components/Button/index";
 import Counter from "./components/Counter/index";
 import Message from "./components/Message/index";
 
+type CatImage = {
+  url: string;
+  matched: boolean;
+  id: number;
+};
+
 function App() {
-  const [cards, setCards] = useState([]);
-  const [turns, setTurns] = useState(0);
-  const [cardOne, setCardOne] = useState(null);
-  const [cardTwo, setCardTwo] = useState(null);
-  const [disabled, setDisabled] = useState(false);
-  const [message, setMessage] = useState("");
-  const [matchedPairs, setMatchedPairs] = useState(false);
+  const [cards, setCards] = useState<CatImage[]>([]);
+  const [turns, setTurns] = useState<number>(0);
+  const [cardOne, setCardOne] = useState<CatImage | null>(null);
+  const [cardTwo, setCardTwo] = useState<CatImage | null>(null);
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const [matchedPairs, setMatchedPairs] = useState<number>(0);
 
   //starting with no points
   // let points = 0;
@@ -28,26 +35,26 @@ function App() {
     const apiKey = process.env.REACT_APP_API_KEY;
     const api = `https://api.thecatapi.com/v1/images/search?limit=10`;
 
-    setMatchedPairs(false);
+    setMatchedPairs(0);
 
-    let deck = [];
+    let deck: CatImage[] = [];
 
-    fetch(api, { headers: { "x-api-key": apiKey } })
+    fetch(api, { headers: { "x-api-key": apiKey || "" } })
       .then((response) => response.json())
       .then((data) => {
-        const images = data.slice(0, 8);
+        const images = data.slice(0, 8) as CatImage[];
         deck = [...images, ...images]
           .sort(() => Math.random() - 0.5)
           .map((card) => ({ ...card, matched: false, id: Math.random() }));
         setCards(deck);
         setTurns(0);
-        setMatchedPairs(false); // Reset matchedPairs to false
+        setMatchedPairs(0); // Reset matchedPairs to 0
       })
       .catch((error) => console.error(error));
   };
 
   //if a card already has been selected, set next card to "cardTwo"
-  const handleChoice = (card) => {
+  const handleChoice = (card: CatImage) => {
     cardOne ? setCardTwo(card) : setCardOne(card);
   };
 
