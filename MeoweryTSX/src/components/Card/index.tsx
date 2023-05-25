@@ -1,10 +1,17 @@
 import "./card.css";
 
-function Card({ card, handleChoice, flipped, disabled }) {
+interface CardProps {
+  card: { matched: boolean; url: string };
+  handleChoice: (card: { matched: boolean; url: string }) => void;
+  flipped: boolean;
+  disabled: boolean;
+}
+
+function Card({ card, handleChoice, flipped, disabled }: CardProps) {
   const isMatched = card.matched;
 
   // disable clicking on more than two cards at once
-  const handleClick = () => {
+  const handleClick = (): void => {
     if (!disabled) {
       handleChoice(card);
     }
