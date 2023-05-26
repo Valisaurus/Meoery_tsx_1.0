@@ -1,6 +1,6 @@
 import "./App.css";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { useQuery } from "@tanstack/react-query";
+import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect } from "react";
 import Header from "./components/Header/index";
 import Board from "./components/Board/index";
@@ -9,69 +9,53 @@ import Button from "./components/Button/index";
 import Counter from "./components/Counter/index";
 import Message from "./components/Message/index";
 
-type CatImage = {
+type CardData = {
   url: string;
+  id: string;
   matched: boolean;
-  id: number;
-};
-
-type Cat = {
-  message: string;
-  status: string;
 };
 
 function App() {
-  const [cards, setCards] = useState<CatImage[]>([]);
+  const [cards, setCards] = useState<CardData[]>([]);
   const [turns, setTurns] = useState<number>(0);
-  const [cardOne, setCardOne] = useState<CatImage | null>(null);
-  const [cardTwo, setCardTwo] = useState<CatImage | null>(null);
+  const [cardOne, setCardOne] = useState<CardData | null>(null);
+  const [cardTwo, setCardTwo] = useState<CardData | null>(null);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [matchedPairs, setMatchedPairs] = useState<number>(0);
-  const [imageData, setImageData] = useState<Cat | undefined>();
-  const [error, setError] = useState<string | undefined>();
 
-  // fetch cat-images from api when app is mounted
+  const apiKey: string = import.meta.env.REACT_APP_API_KEY;
+
+
+  const { isLoading, error, data } = useQuery<CardData[]>({
+    queryKey: ["cardData"],
+    queryFn: (): Promise<CardData[]> =>
+      fetch(`https://api.thecatapi.com/v1/images/search`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => data as CardData[]),
+  });
+
   useEffect(() => {
-    createDeck1();
-  }, []);
-
-  function createDeck(props: { url: string }) {}
-
-  const createDeck1 = async () => {
-    const apiKey: string = process.env.REACT_APP_API_KEY;
-    const api = `https://api.thecatapi.com/v1/images/search?limit=10`;
-
-    setMatchedPairs(0);
-
-    const queryClient = useQueryClient();
-
-    try {
-      const response = await fetch(api, {
-        headers: { "x-api-key": apiKey || "" },
-      });
-      const data = await response.json();
-      setImageData(data);
-
-      const images = data.slice(0, 8) as CatImage[];
-      const deck = [...images, ...images]
-        .sort(() => Math.random() - 0.5)
-        .map((card) => ({ ...card, matched: false, id: Math.random() }));
-
-      setCards(deck);
-      setTurns(0);
-      setMatchedPairs(0); // Reset matchedPairs to 0
-
-      // Invalidate and refetch the deck query to update the data
-      await queryClient.invalidateQueries(["deck"]);
-      await queryClient.refetchQueries(["deck"]);
-    } catch (error) {
-      setError(error as string);
+    if (data) {
+      setCards((prevCards) => [...prevCards, ...data]);
     }
-  };
+  }, [data]);
 
+  function createBoard() {
+
+    if (isLoading) return <>Loading...</>;
+
+    if (error) return <>Error loading data.</>;
+
+    if (!data) return <>No data Found.</>;
+  }
   //if a card already has been selected, set next card to "cardTwo"
-  const handleChoice = (card: CatImage) => {
+  const handleChoice = (card: CardData) => {
     cardOne ? setCardTwo(card) : setCardOne(card);
   };
 
@@ -120,7 +104,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Button createDeck={createDeck} buttonText="New Game!" />
+      <Button createBoard={createBoard} buttonText="New Game!" />
       <div className="info-box">
         <Counter turns={turns} counterText="Turns: " />
         {message && <Message messageText={message} />}
@@ -128,7 +112,7 @@ function App() {
       <Board>
         {cards.map((card) => (
           <Card
-            key={card.id}
+            key={uuidv4()}
             card={card}
             handleChoice={handleChoice}
             flipped={card === cardOne || card === cardTwo || card.matched}

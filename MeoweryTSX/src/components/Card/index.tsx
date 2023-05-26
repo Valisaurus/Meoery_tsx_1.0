@@ -1,10 +1,18 @@
 import "./card.css";
 
+type Card = {
+  url: string;
+  matched: boolean;
+  id: string;
+};
+
+
 interface CardProps {
-  card: { matched: boolean; url: string };
-  handleChoice: (card: { matched: boolean; url: string }) => void;
+  card: { matched: boolean; url: string; id: string;  };
+  handleChoice: (card: { matched: boolean; url: string; id: string; }) => void;
   flipped: boolean;
   disabled: boolean;
+  key: string;
 }
 
 function Card({ card, handleChoice, flipped, disabled }: CardProps) {
