@@ -10,8 +10,6 @@ import Counter from "./components/Counter/index";
 import Message from "./components/Message/index";
 import type { CardData } from "./types/types";
 
-
-
 function App() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [turns, setTurns] = useState<number>(0);
@@ -23,22 +21,22 @@ function App() {
 
   const apiKey: string = import.meta.env.REACT_APP_API_KEY;
 
-
-  const { isLoading, error, data } = useQuery<CardData[]>({
+  const { isLoading, error, data, refetch } = useQuery<CardData[]>({ //CardData är en generisk typ
     queryKey: ["cardData"],
-    queryFn: (): Promise<CardData[]> =>
-      fetch(`https://api.thecatapi.com/v1/images/search?limit=10`, {
+    queryFn: () => {
+      console.log("hallo")
+      return fetch(`https://api.thecatapi.com/v1/images/search?limit=10`, {
         headers: {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
       })
         .then((res) => res.json())
-        .then((data) => data as CardData[]),
-        
+        .then((data) => data );
+    },
+    refetchOnWindowFocus: false,
   });
 
-  
   useEffect(() => {
     if (data) {
       const images = data.slice(0, 8);
@@ -54,15 +52,6 @@ function App() {
       setMatchedPairs(0);
     }
   }, [data]);
-
-  function createBoard() {
-
-    if (isLoading) return <div>Loading...</div>;
-
-    if (error) return <div>Error loading data.</div>;
-
-    if (!data) return <div>No data Found.</div>;
-  }
 
   //if a card already has been selected, set next card to "cardTwo"
   const handleChoice = (card: CardData) => {
@@ -85,7 +74,10 @@ function App() {
         });
         setMatchedPairs((prevMatchedPairs) => prevMatchedPairs + 1);
         setMessage("Meeoow cats matched!");
-        resetTurn();
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
+        setTimeout(() => resetTurn(), 2000);
       } else {
         setMessage("oops no match, try again!");
         setTimeout(() => {
@@ -99,7 +91,10 @@ function App() {
   // when all cards have matched
   useEffect(() => {
     if (matchedPairs && matchedPairs === 8) {
-      setMessage("Purrrrrrfect! All cats have found their buddy!");
+      setTimeout(() => {
+        setMessage("Purrrrrrfect! All cats have found their buddy!");
+      }, 500);
+      setTimeout(() => refetch());
     }
   }, [matchedPairs, cards]);
 
@@ -109,26 +104,35 @@ function App() {
     setCardTwo(null);
     setTurns((prevTurns) => prevTurns + 1);
     setDisabled(false);
+    setMessage("");
   };
 
+  if (isLoading) return <div>Loading...</div>;
+
+  if (error) return <div>Error loading data.</div>;
+
+  if (!data) return <div>No data Found.</div>;
+  
   return (
     <div className="App">
       <Header />
-      <Button createBoard={createBoard} buttonText="New Game!" />
+      <Button newGame={refetch} buttonText="New Game!" />
       <div className="info-box">
         <Counter turns={turns} counterText="Turns: " />
         {message && <Message messageText={message} />}
       </div>
       <Board>
-        {cards.map((card) => (
-          <Card
-            key={uuidv4()}
-            card={card}
-            handleChoice={handleChoice}
-            flipped={card === cardOne || card === cardTwo || card.matched}
-            disabled={disabled}
-          />
-        ))}
+        {!isLoading &&
+          !error &&
+          cards.map((card) => (
+            <Card
+              key={uuidv4()}
+              card={card}
+              handleChoice={handleChoice}
+              flipped={card === cardOne || card === cardTwo || card.matched}
+              disabled={disabled}
+            />
+          ))}
       </Board>
     </div>
   );

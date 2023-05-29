@@ -2,13 +2,13 @@ import * as PropTypes from "prop-types";
 import { ButtonStyled } from "./styled";
 
 interface ButtonProps {
-  createBoard: () => void;
+  newGame: () => void;
   buttonText: string;
 }
 
-function Button({ createBoard, buttonText }: ButtonProps) {
+function Button({ newGame, buttonText }: ButtonProps) {
   const handleClick = () => {
-    createBoard();
+    newGame();
   };
 
   return (
