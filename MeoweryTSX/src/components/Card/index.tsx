@@ -1,10 +1,16 @@
 import "./card.css";
 
-type Card = {
-  url: string;
-  matched: boolean;
-  id: string;
-};
+// type Card = {
+//   url: string;
+//   matched: boolean;
+//   id: string;
+// };
+
+// type CardData = {
+//   url: string;
+//   id: string;
+//   matched: boolean;
+// };
 
 
 interface CardProps {
