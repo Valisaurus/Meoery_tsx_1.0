@@ -19,6 +19,7 @@ function App() {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [matchedPairs, setMatchedPairs] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
 
   const apiKey: string = import.meta.env.REACT_APP_API_KEY;
 
@@ -83,12 +84,14 @@ function App() {
         });
         setMatchedPairs((prevMatchedPairs) => prevMatchedPairs + 1);
         setMessage("Meeoow cats matched!");
+        setScore((prevScore) => prevScore + 4);
         setTimeout(() => {
           setMessage("");
         }, 3000);
         setTimeout(() => resetTurn(), 2000);
       } else {
         setMessage("oops no match, try again!");
+        setScore((prevScore) => prevScore - 1);
         setTimeout(() => {
           setMessage("");
         }, 3000);
@@ -121,16 +124,16 @@ function App() {
   };
 
   // count score
-  const countMatchedCards = (cards: any[]) => {
-    return cards.reduce((count: number, card: { matched: any }) => {
-      if (card.matched) {
-        return count + 1;
-      } else {
-        return count;
-      }
-    }, 0);
-  };
-  const matchedCardsCount = countMatchedCards(cards);
+  // const countMatchedCards = (cards: CardData[]) => {
+  //   return cards.reduce((count: number, card: { matched: boolean }) => {
+  //     if (card.matched) {
+  //       return count + 4;
+  //     } else {
+  //       return count - 1;
+  //     }
+  //   }, 0);
+  // };
+  // const matchedCardsCount = countMatchedCards(cards);
 
   return (
     <div className="App">
@@ -139,7 +142,7 @@ function App() {
         <div className="info-box">
           <Counter turns={turns} counterText="Turns: " />
           {message && <Message messageText={message} />}
-          {<Score score={matchedCardsCount} scoreText="Score: " />}
+          {<Score score={score} scoreText="Score: " />}
         </div>
         <Board>
           {!isLoading &&

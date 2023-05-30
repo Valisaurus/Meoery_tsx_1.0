@@ -1,58 +1,62 @@
 body {
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(255 254 235);
-    margin: 0;
-  
-    font-family: 'Arvo';
-    font-weight: 200;
-  }
-  
-  .info-box {
-    display: flex;
-    justify-content: space-between; 
-    padding: 20px 20px 0px 20px;
-  }
-  
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
-  }
-  
-  
-  /* FONTS */
-  @font-face {
-    font-family: 'Arvo-italic';
-    src: url('./assets/fonts/Arvo-Italic.woff2') format('woff2'),
-        url('./assets/fonts/Arvo-Italic.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
-  }
-  
-  @font-face {
-    font-family: 'Arvo-bold';
-    src: url('./assets/fonts/Arvo-Bold.woff2') format('woff2'),
-        url('./assets/fonts/Arvo-Bold.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-  }
-  
-  @font-face {
-    font-family: 'Arvo-bold-italic';
-    src: url('./assets/fonts/Arvo-BoldItalic.woff2') format('woff2'),
-        url('./assets/fonts/Arvo-BoldItalic.woff') format('woff');
-    font-weight: bold;
-    font-style: italic;
-    font-display: swap;
-  }
-  
-  @font-face {
-    font-family: 'Arvo';
-    src: url('./assets/fonts/Arvo.woff2') format('woff2'),
-        url('./assets/fonts/Arvo.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(255 254 235);
+  margin: 0;
+
+  font-family: "Arvo";
+  font-weight: 200;
+}
+
+.board-wrapper {
+  margin: 2rem;
+  max-width: 50rem;
+}
+
+.info-box {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 20px 0px 20px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* FONTS */
+@font-face {
+  font-family: "Arvo-italic";
+  src: url("./assets/fonts/Arvo-Italic.woff2") format("woff2"),
+    url("./assets/fonts/Arvo-Italic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Arvo-bold";
+  src: url("./assets/fonts/Arvo-Bold.woff2") format("woff2"),
+    url("./assets/fonts/Arvo-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Arvo-bold-italic";
+  src: url("./assets/fonts/Arvo-BoldItalic.woff2") format("woff2"),
+    url("./assets/fonts/Arvo-BoldItalic.woff") format("woff");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Arvo";
+  src: url("./assets/fonts/Arvo.woff2") format("woff2"),
+    url("./assets/fonts/Arvo.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
