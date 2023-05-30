@@ -1,4 +1,3 @@
-// import React from "react";
 import { CounterStyled } from "./styled";
 import * as PropTypes from "prop-types";
 

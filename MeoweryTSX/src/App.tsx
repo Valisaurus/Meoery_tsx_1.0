@@ -7,10 +7,9 @@ import Board from "./components/Board/index";
 import Card from "./components/Card/index";
 import Button from "./components/Button/index";
 import Counter from "./components/Counter/index";
+import Score from "./components/Score/index";
 import Message from "./components/Message/index";
 import type { CardData } from "./types/types";
-
-
 
 function App() {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -23,22 +22,29 @@ function App() {
 
   const apiKey: string = import.meta.env.REACT_APP_API_KEY;
 
-
-  const { isLoading, error, data } = useQuery<CardData[]>({
+  //Tanstack Query to fetch data from api
+  const { isLoading, error, data, refetch } = useQuery<CardData[]>({
     queryKey: ["cardData"],
-    queryFn: (): Promise<CardData[]> =>
-      fetch(`https://api.thecatapi.com/v1/images/search?limit=10`, {
+    queryFn: () => {
+      //Since the api "limit" didn't work, we had to limit images manually
+      return fetch(`https://api.thecatapi.com/v1/images/search?limit=10`, {
         headers: {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
       })
         .then((res) => res.json())
-        .then((data) => data as CardData[]),
-        
+        .then((data) => data as CardData[]);
+    },
+    refetchOnWindowFocus: false,
   });
 
-  
+  // Trigger manual data fetching
+  const fetchData = () => {
+    refetch();
+  };
+
+  // Make copy of every image, shuffle them and give them properties for "matched" and unique ids
   useEffect(() => {
     if (data) {
       const images = data.slice(0, 8);
@@ -55,15 +61,6 @@ function App() {
     }
   }, [data]);
 
-  function createBoard() {
-
-    if (isLoading) return <div>Loading...</div>;
-
-    if (error) return <div>Error loading data.</div>;
-
-    if (!data) return <div>No data Found.</div>;
-  }
-
   //if a card already has been selected, set next card to "cardTwo"
   const handleChoice = (card: CardData) => {
     cardOne ? setCardTwo(card) : setCardOne(card);
@@ -72,6 +69,7 @@ function App() {
   //compare the selected cards and display message if match or no match
   useEffect(() => {
     if (cardOne && cardTwo) {
+      //disable clicking more than 2 cards
       setDisabled(true);
       if (cardOne.url === cardTwo.url) {
         setCards((prevCards) => {
@@ -85,7 +83,10 @@ function App() {
         });
         setMatchedPairs((prevMatchedPairs) => prevMatchedPairs + 1);
         setMessage("Meeoow cats matched!");
-        resetTurn();
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
+        setTimeout(() => resetTurn(), 2000);
       } else {
         setMessage("oops no match, try again!");
         setTimeout(() => {
@@ -98,8 +99,15 @@ function App() {
 
   // when all cards have matched
   useEffect(() => {
-    if (matchedPairs && matchedPairs === 8) {
+    if (matchedPairs && matchedPairs === cards.length / 2) {
       setMessage("Purrrrrrfect! All cats have found their buddy!");
+      const timeoutId = setTimeout(() => {
+        setMessage("");
+        refetch();
+      }, 5000);
+      return () => {
+        clearTimeout(timeoutId);
+      };
     }
   }, [matchedPairs, cards]);
 
@@ -109,27 +117,45 @@ function App() {
     setCardTwo(null);
     setTurns((prevTurns) => prevTurns + 1);
     setDisabled(false);
+    setMessage("");
   };
+
+  // count score
+  const countMatchedCards = (cards: any[]) => {
+    return cards.reduce((count: number, card: { matched: any }) => {
+      if (card.matched) {
+        return count + 1;
+      } else {
+        return count;
+      }
+    }, 0);
+  };
+  const matchedCardsCount = countMatchedCards(cards);
 
   return (
     <div className="App">
       <Header />
-      <Button createBoard={createBoard} buttonText="New Game!" />
-      <div className="info-box">
-        <Counter turns={turns} counterText="Turns: " />
-        {message && <Message messageText={message} />}
+      <div className="board-wrapper">
+        <div className="info-box">
+          <Counter turns={turns} counterText="Turns: " />
+          {message && <Message messageText={message} />}
+          {<Score score={matchedCardsCount} scoreText="Score: " />}
+        </div>
+        <Board>
+          {!isLoading &&
+            !error &&
+            cards.map((card) => (
+              <Card
+                key={card.id}
+                card={card}
+                handleChoice={handleChoice}
+                flipped={card === cardOne || card === cardTwo || card.matched}
+                disabled={disabled}
+              />
+            ))}
+        </Board>
       </div>
-      <Board>
-        {cards.map((card) => (
-          <Card
-            key={uuidv4()}
-            card={card}
-            handleChoice={handleChoice}
-            flipped={card === cardOne || card === cardTwo || card.matched}
-            disabled={disabled}
-          />
-        ))}
-      </Board>
+      <Button newGame={fetchData} buttonText="New Game!" />
     </div>
   );
 }
