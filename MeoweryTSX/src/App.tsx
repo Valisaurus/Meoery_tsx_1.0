@@ -9,7 +9,9 @@ import Button from "./components/Button/index";
 import Counter from "./components/Counter/index";
 import Score from "./components/Score/index";
 import Message from "./components/Message/index";
+import FinalMessage from "./components/FinishText";
 import type { CardData } from "./types/types";
+import { motion } from "framer-motion";
 
 function App() {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -18,6 +20,7 @@ function App() {
   const [cardTwo, setCardTwo] = useState<CardData | null>(null);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const [finalMessage, setFinalMessage] = useState<string>("");
   const [matchedPairs, setMatchedPairs] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
 
@@ -111,9 +114,10 @@ function App() {
   // when all cards have matched
   useEffect(() => {
     if (matchedPairs && matchedPairs === cards.length / 2) {
-      setMessage("Purrrrrrfect! All cats have found their buddy!");
+      setMessage("");
+      setFinalMessage("Purrrrrrfect! All cats have found their buddy!");
       const timeoutId = setTimeout(() => {
-        setMessage("");
+        //setFinalMessage("");
         refetch();
       }, 3000);
       return () => {
@@ -129,6 +133,7 @@ function App() {
     setTurns((prevTurns) => prevTurns + 1);
     setDisabled(false);
     setMessage("");
+    //setFinalMessage("");
   };
 
   return (
@@ -138,8 +143,12 @@ function App() {
         <div className="info-box">
           <Counter turns={turns} counterText="Turns: " />
           {message && <Message messageText={message} />}
+
           {<Score score={score} scoreText="Score: " />}
         </div>
+        <motion.div>
+          {finalMessage && <FinalMessage finalMessageText={finalMessage} />}
+        </motion.div>
         <Board>
           {!isLoading &&
             !error &&
