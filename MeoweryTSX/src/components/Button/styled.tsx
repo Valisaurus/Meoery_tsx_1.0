@@ -1,10 +1,9 @@
 import styled from "styled-components";
 
 export const ButtonStyled = styled.button`
-    background-color: rgb(255, 200, 240);
+    background-color: rgb(255 236 250);
     padding: 25px;
-    border: none;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border: 1px solid blue;
     border-radius: 30px;
     font-family: 'Arvo';
     font-size: 16px;

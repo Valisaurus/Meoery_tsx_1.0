@@ -1,7 +1,7 @@
 body {
     width: 100vw;
     height: 100vh;
-    background-color: rgb(255, 225, 243);
+    background-color: rgb(255 254 235);
     margin: 0;
   
     font-family: 'Arvo';
@@ -9,14 +9,9 @@ body {
   }
   
   .info-box {
-    width: 100%;
     display: flex;
     justify-content: space-between; 
     padding: 20px 20px 0px 20px;
-  }
-  
-  h1 {
-    letter-spacing: 1.5px;
   }
   
   code {

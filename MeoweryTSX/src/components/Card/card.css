@@ -1,6 +1,5 @@
 .card {
   position: relative;
-  border: 1px solid blue;
   border-radius: 10px;
 }
 
@@ -29,6 +28,7 @@
   transition: all ease-in 0.5s;
   backface-visibility: hidden;
   border-radius: 10px;
+  border: 1px solid blue;
 }
 
 .flipped .front {
@@ -38,9 +38,10 @@
 .card .back {
   transition: all ease-in 0.5s;
   transition-delay: 0.2s;
-  background-color: rgb(255, 200, 240);
+  background-color: rgb(255 236 250);
   border-radius: 10px;
   cursor: pointer;
+  border: 1px solid blue;
 }
 
 .flipped .back {

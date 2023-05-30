@@ -102,11 +102,11 @@ function App() {
     if (matchedPairs && matchedPairs === cards.length / 2) {
       setMessage("Purrrrrrfect! All cats have found their buddy!");
       const timeoutId = setTimeout(() => {
-        setMessage(""); 
-        refetch(); 
+        setMessage("");
+        refetch();
       }, 5000);
       return () => {
-        clearTimeout(timeoutId); 
+        clearTimeout(timeoutId);
       };
     }
   }, [matchedPairs, cards]);
@@ -135,25 +135,27 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Button newGame={fetchData} buttonText="New Game!" />
-      <div className="info-box">
-        <Counter turns={turns} counterText="Turns: " />
-        {message && <Message messageText={message} />}
-        {<Score score={matchedCardsCount} scoreText="Score: " />}
+      <div className="board-wrapper">
+        <div className="info-box">
+          <Counter turns={turns} counterText="Turns: " />
+          {message && <Message messageText={message} />}
+          {<Score score={matchedCardsCount} scoreText="Score: " />}
+        </div>
+        <Board>
+          {!isLoading &&
+            !error &&
+            cards.map((card) => (
+              <Card
+                key={card.id}
+                card={card}
+                handleChoice={handleChoice}
+                flipped={card === cardOne || card === cardTwo || card.matched}
+                disabled={disabled}
+              />
+            ))}
+        </Board>
       </div>
-      <Board>
-        {!isLoading &&
-          !error &&
-          cards.map((card) => (
-            <Card
-              key={card.id}
-              card={card}
-              handleChoice={handleChoice}
-              flipped={card === cardOne || card === cardTwo || card.matched}
-              disabled={disabled}
-            />
-          ))}
-      </Board>
+      <Button newGame={fetchData} buttonText="New Game!" />
     </div>
   );
 }
