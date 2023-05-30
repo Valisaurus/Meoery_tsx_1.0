@@ -7,6 +7,7 @@ import Board from "./components/Board/index";
 import Card from "./components/Card/index";
 import Button from "./components/Button/index";
 import Counter from "./components/Counter/index";
+import Score from "./components/Score/index";
 import Message from "./components/Message/index";
 import type { CardData } from "./types/types";
 
@@ -21,10 +22,11 @@ function App() {
 
   const apiKey: string = import.meta.env.REACT_APP_API_KEY;
 
-  const { isLoading, error, data, refetch } = useQuery<CardData[]>({ //CardData är en generisk typ
+  //Tanstack Query to fetch data from api
+  const { isLoading, error, data, refetch } = useQuery<CardData[]>({
     queryKey: ["cardData"],
     queryFn: () => {
-      console.log("hallo")
+      //Since the api "limit" didn't work, we had to limit images manually
       return fetch(`https://api.thecatapi.com/v1/images/search?limit=10`, {
         headers: {
           "Content-Type": "application/json",
@@ -32,11 +34,17 @@ function App() {
         },
       })
         .then((res) => res.json())
-        .then((data) => data );
+        .then((data) => data as CardData[]);
     },
     refetchOnWindowFocus: false,
   });
 
+  // Trigger manual data fetching
+  const fetchData = () => {
+    refetch();
+  };
+
+  // Make copy of every image, shuffle them and give them properties for "matched" and unique ids
   useEffect(() => {
     if (data) {
       const images = data.slice(0, 8);
@@ -61,6 +69,7 @@ function App() {
   //compare the selected cards and display message if match or no match
   useEffect(() => {
     if (cardOne && cardTwo) {
+      //disable clicking more than 2 cards
       setDisabled(true);
       if (cardOne.url === cardTwo.url) {
         setCards((prevCards) => {
@@ -90,11 +99,15 @@ function App() {
 
   // when all cards have matched
   useEffect(() => {
-    if (matchedPairs && matchedPairs === 8) {
-      setTimeout(() => {
-        setMessage("Purrrrrrfect! All cats have found their buddy!");
-      }, 500);
-      setTimeout(() => refetch());
+    if (matchedPairs && matchedPairs === cards.length / 2) {
+      setMessage("Purrrrrrfect! All cats have found their buddy!");
+      const timeoutId = setTimeout(() => {
+        setMessage(""); 
+        refetch(); 
+      }, 5000);
+      return () => {
+        clearTimeout(timeoutId); 
+      };
     }
   }, [matchedPairs, cards]);
 
@@ -107,26 +120,33 @@ function App() {
     setMessage("");
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  // count score
+  const countMatchedCards = (cards: any[]) => {
+    return cards.reduce((count: number, card: { matched: any }) => {
+      if (card.matched) {
+        return count + 1;
+      } else {
+        return count;
+      }
+    }, 0);
+  };
+  const matchedCardsCount = countMatchedCards(cards);
 
-  if (error) return <div>Error loading data.</div>;
-
-  if (!data) return <div>No data Found.</div>;
-  
   return (
     <div className="App">
       <Header />
-      <Button newGame={refetch} buttonText="New Game!" />
+      <Button newGame={fetchData} buttonText="New Game!" />
       <div className="info-box">
         <Counter turns={turns} counterText="Turns: " />
         {message && <Message messageText={message} />}
+        {<Score score={matchedCardsCount} scoreText="Score: " />}
       </div>
       <Board>
         {!isLoading &&
           !error &&
           cards.map((card) => (
             <Card
-              key={uuidv4()}
+              key={card.id}
               card={card}
               handleChoice={handleChoice}
               flipped={card === cardOne || card === cardTwo || card.matched}

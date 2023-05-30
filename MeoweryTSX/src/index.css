@@ -10,8 +10,8 @@ body {
   
   .info-box {
     width: 100%;
-    /* display: flex;
-    justify-content: space-around; */
+    display: flex;
+    justify-content: space-between; 
     padding: 20px 20px 0px 20px;
   }
   
@@ -28,8 +28,8 @@ body {
   /* FONTS */
   @font-face {
     font-family: 'Arvo-italic';
-    src: url('./fonts/Arvo-Italic.woff2') format('woff2'),
-        url('./fonts/Arvo-Italic.woff') format('woff');
+    src: url('./assets/fonts/Arvo-Italic.woff2') format('woff2'),
+        url('./assets/fonts/Arvo-Italic.woff') format('woff');
     font-weight: normal;
     font-style: italic;
     font-display: swap;
@@ -37,8 +37,8 @@ body {
   
   @font-face {
     font-family: 'Arvo-bold';
-    src: url('./fonts/Arvo-Bold.woff2') format('woff2'),
-        url('./fonts/Arvo-Bold.woff') format('woff');
+    src: url('./assets/fonts/Arvo-Bold.woff2') format('woff2'),
+        url('./assets/fonts/Arvo-Bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -46,8 +46,8 @@ body {
   
   @font-face {
     font-family: 'Arvo-bold-italic';
-    src: url('./fonts/Arvo-BoldItalic.woff2') format('woff2'),
-        url('./fonts/Arvo-BoldItalic.woff') format('woff');
+    src: url('./assets/fonts/Arvo-BoldItalic.woff2') format('woff2'),
+        url('./assets/fonts/Arvo-BoldItalic.woff') format('woff');
     font-weight: bold;
     font-style: italic;
     font-display: swap;
@@ -55,8 +55,8 @@ body {
   
   @font-face {
     font-family: 'Arvo';
-    src: url('./fonts/Arvo.woff2') format('woff2'),
-        url('./fonts/Arvo.woff') format('woff');
+    src: url('./assets/fonts/Arvo.woff2') format('woff2'),
+        url('./assets/fonts/Arvo.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
