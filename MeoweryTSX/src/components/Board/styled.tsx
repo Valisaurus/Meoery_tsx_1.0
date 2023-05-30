@@ -7,9 +7,6 @@ export const BoardStyled = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  /*   
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr); */
   padding: 20px;
   gap: 1em;
 `;

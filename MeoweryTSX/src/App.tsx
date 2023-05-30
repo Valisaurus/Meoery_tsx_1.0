@@ -59,6 +59,7 @@ function App() {
       setCards(deckWithIds);
       setTurns(0);
       setMatchedPairs(0);
+      setScore(0);
     }
   }, [data]);
 
@@ -72,7 +73,7 @@ function App() {
     if (cardOne && cardTwo) {
       //disable clicking more than 2 cards
       setDisabled(true);
-      if (cardOne.url === cardTwo.url) {
+      if (cardOne.id !== cardTwo.id && cardOne.url === cardTwo.url) {
         setCards((prevCards) => {
           return prevCards.map((card) => {
             if (card.url === cardOne.url) {
@@ -88,6 +89,13 @@ function App() {
         setTimeout(() => {
           setMessage("");
         }, 3000);
+        setTimeout(() => resetTurn(), 2000);
+      } else if (cardOne.id === cardTwo.id) {
+        setMessage("don't try to cheat");
+        setScore((prevScore) => prevScore - 1);
+        setTimeout(() => {
+          setMessage("");
+        }, 2000);
         setTimeout(() => resetTurn(), 2000);
       } else {
         setMessage("oops no match, try again!");
@@ -107,7 +115,7 @@ function App() {
       const timeoutId = setTimeout(() => {
         setMessage("");
         refetch();
-      }, 5000);
+      }, 3000);
       return () => {
         clearTimeout(timeoutId);
       };
@@ -122,18 +130,6 @@ function App() {
     setDisabled(false);
     setMessage("");
   };
-
-  // count score
-  // const countMatchedCards = (cards: CardData[]) => {
-  //   return cards.reduce((count: number, card: { matched: boolean }) => {
-  //     if (card.matched) {
-  //       return count + 4;
-  //     } else {
-  //       return count - 1;
-  //     }
-  //   }, 0);
-  // };
-  // const matchedCardsCount = countMatchedCards(cards);
 
   return (
     <div className="App">
