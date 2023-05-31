@@ -7,21 +7,25 @@ export const FinalMessageStyled = styled.div`
   position: absolute;
   z-index: 99;
   background-color: rgb(255 236 250);
+  border: 1px solid blue;
   border-radius: 2rem;
+  box-shadow: rgb(0, 0, 255) 0px 10px 20px -10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  animation-name: example;
+  animation-name: color-fade;
   animation-duration: 4s;
+  animation-timing-function: ease-in-out;
 
-  @keyframes example {
+  @keyframes color-fade {
     from {
-      background-color: red;
+      background-color: rgb(255 236 250);
     }
     to {
-      background-color: yellow;
+      background-color: rgb(255 254 235);
     }
+
   }
 `;
 export const FinalMessageStyledParagraph = styled.p`

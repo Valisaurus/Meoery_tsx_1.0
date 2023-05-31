@@ -23,7 +23,7 @@ function Card({ card, handleChoice, flipped, disabled }: CardProps) {
     <div className={`card ${isMatched ? "matched" : ""}`}>
       <div className={flipped ? "flipped" : ""}>
         <img className="front" src={card.url} alt="cat" />
-        <div className="back" onClick={handleClick}></div>
+        <div className="back hover-scale" onClick={handleClick}></div>
       </div>
     </div>
   );
