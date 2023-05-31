@@ -1,6 +1,6 @@
 // import React from "react";
 import * as PropTypes from "prop-types";
-import { FinalMessageStyled } from "./styled";
+import { FinalMessageStyled, FinalMessageStyledParagraph } from "./styled";
 
 interface FinalMessageProps {
   finalMessageText: string;
@@ -9,7 +9,9 @@ interface FinalMessageProps {
 function FinalMessage({ finalMessageText }: FinalMessageProps) {
   return (
     <FinalMessageStyled>
-      <p>text={finalMessageText} </p>
+      <FinalMessageStyledParagraph>
+        {finalMessageText}
+      </FinalMessageStyledParagraph>
     </FinalMessageStyled>
   );
 }

@@ -11,7 +11,6 @@ import Score from "./components/Score/index";
 import Message from "./components/Message/index";
 import FinalMessage from "./components/FinishText";
 import type { CardData } from "./types/types";
-import { motion } from "framer-motion";
 
 function App() {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -117,9 +116,9 @@ function App() {
       setMessage("");
       setFinalMessage("Purrrrrrfect! All cats have found their buddy!");
       const timeoutId = setTimeout(() => {
-        //setFinalMessage("");
+        setFinalMessage("");
         refetch();
-      }, 3000);
+      }, 5000);
       return () => {
         clearTimeout(timeoutId);
       };
@@ -143,13 +142,11 @@ function App() {
         <div className="info-box">
           <Counter turns={turns} counterText="Turns: " />
           {message && <Message messageText={message} />}
-
           {<Score score={score} scoreText="Score: " />}
         </div>
-        <motion.div>
-          {finalMessage && <FinalMessage finalMessageText={finalMessage} />}
-        </motion.div>
+
         <Board>
+          {finalMessage && <FinalMessage finalMessageText={finalMessage} />}
           {!isLoading &&
             !error &&
             cards.map((card) => (
