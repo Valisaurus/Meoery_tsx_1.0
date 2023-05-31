@@ -1,25 +1,13 @@
 import "./card.css";
 
-// type Card = {
-//   url: string;
-//   matched: boolean;
-//   id: string;
-// };
-
-// type CardData = {
-//   url: string;
-//   id: string;
-//   matched: boolean;
-// };
-
-
 interface CardProps {
-  card: { matched: boolean; url: string; id: string;  };
-  handleChoice: (card: { matched: boolean; url: string; id: string; }) => void;
+  card: { matched: boolean; url: string; id: string };
+  handleChoice: (card: { matched: boolean; url: string; id: string }) => void;
   flipped: boolean;
   disabled: boolean;
   key: string;
 }
+
 
 function Card({ card, handleChoice, flipped, disabled }: CardProps) {
   const isMatched = card.matched;
@@ -33,10 +21,10 @@ function Card({ card, handleChoice, flipped, disabled }: CardProps) {
 
   return (
     // Add the "matched" class if the card is matched and the "flipped" class if it's flipped
-    <div className={`card ${isMatched ? "matched" : ""}`}> 
+    <div className={`card ${isMatched ? "matched" : ""}`}>
       <div className={flipped ? "flipped" : ""}>
         <img className="front" src={card.url} alt="cat" />
-        <div className="back" onClick={handleClick}></div>
+        <div className="back hover-scale" onClick={handleClick}></div>
       </div>
     </div>
   );

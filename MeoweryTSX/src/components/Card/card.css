@@ -36,12 +36,16 @@
 }
 
 .card .back {
-  transition: all ease-in 0.5s;
+  transition: ease-in 0.5s;
   transition-delay: 0.2s;
   background-color: rgb(255 236 250);
   border-radius: 10px;
   cursor: pointer;
   border: 1px solid blue;
+}
+
+.back:hover {
+  box-shadow: rgb(0, 0, 255) 0px 10px 20px -10px;
 }
 
 .flipped .back {

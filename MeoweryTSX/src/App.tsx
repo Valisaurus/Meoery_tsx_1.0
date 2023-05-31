@@ -9,6 +9,7 @@ import Button from "./components/Button/index";
 import Counter from "./components/Counter/index";
 import Score from "./components/Score/index";
 import Message from "./components/Message/index";
+import FinalMessage from "./components/FinishText";
 import type { CardData } from "./types/types";
 
 function App() {
@@ -18,7 +19,9 @@ function App() {
   const [cardTwo, setCardTwo] = useState<CardData | null>(null);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const [finalMessage, setFinalMessage] = useState<string>("");
   const [matchedPairs, setMatchedPairs] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
 
   const apiKey: string = import.meta.env.REACT_APP_API_KEY;
 
@@ -58,6 +61,7 @@ function App() {
       setCards(deckWithIds);
       setTurns(0);
       setMatchedPairs(0);
+      setScore(0);
     }
   }, [data]);
 
@@ -71,7 +75,7 @@ function App() {
     if (cardOne && cardTwo) {
       //disable clicking more than 2 cards
       setDisabled(true);
-      if (cardOne.url === cardTwo.url) {
+      if (cardOne.id !== cardTwo.id && cardOne.url === cardTwo.url) {
         setCards((prevCards) => {
           return prevCards.map((card) => {
             if (card.url === cardOne.url) {
@@ -83,12 +87,21 @@ function App() {
         });
         setMatchedPairs((prevMatchedPairs) => prevMatchedPairs + 1);
         setMessage("Meeoow cats matched!");
+        setScore((prevScore) => prevScore + 4);
         setTimeout(() => {
           setMessage("");
         }, 3000);
         setTimeout(() => resetTurn(), 2000);
+      } else if (cardOne.id === cardTwo.id) {
+        setMessage("don't try to cheat");
+        setScore((prevScore) => prevScore - 1);
+        setTimeout(() => {
+          setMessage("");
+        }, 2000);
+        setTimeout(() => resetTurn(), 2000);
       } else {
         setMessage("oops no match, try again!");
+        setScore((prevScore) => prevScore - 1);
         setTimeout(() => {
           setMessage("");
         }, 3000);
@@ -100,9 +113,10 @@ function App() {
   // when all cards have matched
   useEffect(() => {
     if (matchedPairs && matchedPairs === cards.length / 2) {
-      setMessage("Purrrrrrfect! All cats have found their buddy!");
+      setMessage("");
+      setFinalMessage("Purrrrrrfect! All cats have found their buddy!");
       const timeoutId = setTimeout(() => {
-        setMessage("");
+        setFinalMessage("");
         refetch();
       }, 5000);
       return () => {
@@ -118,19 +132,8 @@ function App() {
     setTurns((prevTurns) => prevTurns + 1);
     setDisabled(false);
     setMessage("");
+    //setFinalMessage("");
   };
-
-  // count score
-  const countMatchedCards = (cards: any[]) => {
-    return cards.reduce((count: number, card: { matched: any }) => {
-      if (card.matched) {
-        return count + 1;
-      } else {
-        return count;
-      }
-    }, 0);
-  };
-  const matchedCardsCount = countMatchedCards(cards);
 
   return (
     <div className="App">
@@ -139,9 +142,11 @@ function App() {
         <div className="info-box">
           <Counter turns={turns} counterText="Turns: " />
           {message && <Message messageText={message} />}
-          {<Score score={matchedCardsCount} scoreText="Score: " />}
+          {<Score score={score} scoreText="Score: " />}
         </div>
+
         <Board>
+          {finalMessage && <FinalMessage finalMessageText={finalMessage} />}
           {!isLoading &&
             !error &&
             cards.map((card) => (
