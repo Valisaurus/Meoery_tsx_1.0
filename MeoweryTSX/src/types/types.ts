@@ -9,5 +9,4 @@ type CardData = {
   matched: boolean;
 };
 
-
 export type { Board, CardData };

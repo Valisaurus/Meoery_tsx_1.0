@@ -6,7 +6,6 @@ interface CounterProps {
   turns: number;
 }
 
-
 function Counter({ counterText, turns }: CounterProps) {
   return (
     <CounterStyled>
