@@ -17,7 +17,8 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true, // TypeScript will issue an error whenever it will infer "any"
   },
   "include": ["src/**/*"], // include everything in src- and subfolders
   "references": [{ "path": "./tsconfig.node.json" }]
