@@ -44,6 +44,10 @@
   border: 1px solid blue;
 }
 
+.back:hover {
+  transform: scale(1.1);
+}
+
 .flipped .back {
   transform: rotateY(90deg);
   transition-delay: 0s;
