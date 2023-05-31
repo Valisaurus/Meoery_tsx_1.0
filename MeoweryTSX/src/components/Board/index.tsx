@@ -1,9 +1,6 @@
 import { BoardStyled } from "./styled";
 import { ReactNode } from 'react';
 
-type Board = {
-  children: ReactNode;
-}
 
 type PropsWithChildren<Props> = Props & { children: ReactNode };
 

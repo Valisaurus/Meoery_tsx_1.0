@@ -1,7 +1,13 @@
+import { ReactNode } from 'react';
+
+type Board = {
+  children: ReactNode;
+}
 type CardData = {
   url: string;
   id: string;
   matched: boolean;
 };
 
-export type { CardData };
+
+export type { Board, CardData };

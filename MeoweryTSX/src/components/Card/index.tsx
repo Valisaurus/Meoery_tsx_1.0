@@ -8,6 +8,7 @@ interface CardProps {
   key: string;
 }
 
+
 function Card({ card, handleChoice, flipped, disabled }: CardProps) {
   const isMatched = card.matched;
 
