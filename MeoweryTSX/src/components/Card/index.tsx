@@ -11,7 +11,6 @@ interface CardProps {
 
 function Card({ card, handleChoice, flipped, disabled }: CardProps) {
   const isMatched = card.matched;
-
   // disable clicking on more than two cards at once
   const handleClick = (): void => {
     if (!disabled) {

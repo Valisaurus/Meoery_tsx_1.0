@@ -44,12 +44,14 @@ function App() {
 
   // Trigger manual data fetching
   const fetchData = () => {
+    console.log("halloj");
     refetch();
   };
 
   // Make copy of every image, shuffle them and give them properties for "matched" and unique ids
   useEffect(() => {
     if (data) {
+      console.log(data);
       const images = data.slice(0, 8);
       const duplicatedDeck = [...images, ...images];
       const randomizedDeck = duplicatedDeck.sort(() => Math.random() - 0.5);
@@ -149,7 +151,7 @@ function App() {
           {finalMessage && <FinalMessage finalMessageText={finalMessage} />}
           {!isLoading &&
             !error &&
-            cards.map((card) => (
+            cards.map((card) => (        
               <Card
                 key={card.id}
                 card={card}
